@@ -124,10 +124,10 @@ done
 
 if [ $WA_01_CHECK_COUNT -gt 0 ]; then
   echo 'WA-01,O,,' >> $Apache_Result
-  echo "Apache 데몬이 Root 권한으로 실행되고 있지 않음"	>> $Apache_Result;
+  echo "Apache 데몬이 Root 권한으로 실행되고 있지 않아 양호함"	>> $Apache_Result;
 else
   echo 'WA-01,X,,' >> $Apache_Result
-  echo "Apache 데몬이 Root 권한으로 실행되고 있음"		>> $Apache_Result
+  echo "Apache 데몬이 Root 권한으로 실행되고 있어 취약함"		>> $Apache_Result
   ps -ef | grep httpd >> $Apache_Result
 fi
 
@@ -159,13 +159,13 @@ done
 
 if [ $WA_02_CHECK_COUNT -gt 0 ]; then
   echo 'WA-02,X,,' >> $Apache_Result
-  echo "전용 Web Server 계정 소유가 아니거나 750(rwxr-x---) 초과됨"	>> $Apache_Result;
+  echo "전용 Web Server 권한이 750(rwxr-x---)보다 높아 취약함"	>> $Apache_Result;
 
   echo '' >> $Apache_Result
   cat $WA_02_TXT >> $Apache_Result
 else
   echo 'WA-02,O,,' >> $Apache_Result
-  echo "전용 Web Server 계정 소유, 750(rwxr-x---) 이하 권한임"	>> $Apache_Result
+  echo "전용 Web Server 계정 소유이고, 권한이 750(rwxr-x---) 이하 권한으로 양호함"	>> $Apache_Result
 fi
 
 rm -f $WA_02_TXT
@@ -195,13 +195,13 @@ done
 
 if [ $WA_03_CHECK_COUNT -gt 0 ]; then
   echo 'WA-03,X,,' >> $Apache_Result
-  echo "전용 Web Server 계정 소유가 아니거나 600(rw-------) 또는 700(rwx------) 초과 권한임" >> $Apache_Result;
+  echo "전용 Web Server 계정 소유가 아니거나 600(rw-------) 또는 700(rwx------) 초과 권한으로 취약함" >> $Apache_Result;
 
   echo '' >> $Apache_Result
   cat $WA_03_TXT >> $Apache_Result
 else
   echo 'WA-03,O,,' >> $Apache_Result
-  echo "전용 Web Server 계정 소유, 600(rw-------) 또는 700(rwx------) 이하 권한임" >> $Apache_Result;
+  echo "전용 Web Server 계정 소유, 600(rw-------) 또는 700(rwx------) 이하 권한으로 양호함" >> $Apache_Result;
 fi
 
 rm -f $WA_03_TXT
@@ -240,13 +240,13 @@ if [ $filecheck_pass -eq 0 ]; then
 
   if [ $WA_04_CHECK_COUNT -gt 0 ]; then
     echo 'WA-04,X,,' >> $Apache_Result
-  	echo "디렉터리 검색 기능을 사용함" >> $Apache_Result;
+  	echo "디렉터리 검색 기능을 사용해 취약함" >> $Apache_Result;
 
     echo '' >> $Apache_Result
     cat $WA_04_TXT >> $Apache_Result
   else
     echo 'WA-04,O,,' >> $Apache_Result
-  	echo "디렉터리 검색 기능을 사용하지 않음" >> $Apache_Result;
+  	echo "디렉터리 검색 기능을 사용하지 않아 양호함" >> $Apache_Result;
   fi
 
   rm -f $WA_04_TXT
@@ -288,13 +288,13 @@ if [ $filecheck_pass -eq 0 ]; then
 
   if [ $WA_05_CHECK_COUNT -gt 0 ]; then
     echo 'WA-05,X,,' >> $Apache_Result
-    echo "로그 디렉터리(750:drwxr-x---) 또는 로그 파일(640:-rw-r-----)의 권한이 기준 초과로 부여됨" >> $Apache_Result;
+    echo "로그 디렉터리(750:drwxr-x---) 또는 로그 파일(640:-rw-r-----)의 권한이 기준 초과해 취약함" >> $Apache_Result;
 
     echo '' >> $Apache_Result
     cat $WA_05_TXT >> $Apache_Result
   else
     echo 'WA-05,O,,' >> $Apache_Result
-    echo "로그 디렉터리 또는 로그 파일의 권한이 기준 이하로 부여됨" >> $Apache_Result;
+    echo "로그 디렉터리 또는 로그 파일의 권한이 기준 이하로 양호함" >> $Apache_Result;
   fi
 
   rm -f $WA_05_TXT
@@ -334,7 +334,7 @@ fi
 
 if [ $WA_06_CHECK_COUNT -eq 0 ]; then
   echo 'WA-06,X,,' >> $Apache_Result
-  echo "에러 페이지(400, 401, 403, 404, 500) 설정이 없음" >> $Apache_Result;
+  echo "에러 페이지(400, 401, 403, 404, 500) 설정이 없어 취약함" >> $Apache_Result;
 else
   echo 'WA-06,C,,' >> $Apache_Result
   echo "[수동진단] 에러 페이지(400, 401, 403, 404, 500) 설정 확인 필요" >> $Apache_Result;
@@ -379,14 +379,14 @@ fi
 
 if [ `cat $WA_07_TXT | grep -i "ServerTokens" | grep -i "Prod" | wc -l` -eq 0 ]; then
   echo 'WA-07,X,,' >> $Apache_Result
-  echo "ServerTokens이 Prod로 설정되지 않음"	>> $Apache_Result;
+  echo "ServerTokens이 Prod로 설정되지 않아 취약함"	>> $Apache_Result;
 
   echo '' >> $Apache_Result
   cat $WA_07_TXT >> $Apache_Result
 else
   if [ `cat $WA_07_TXT | grep -i "ServerSignature" | grep -i "Off" | wc -l` -eq 0 ]; then
     echo 'WA-07,X,,' >> $Apache_Result
-    echo "ServerTokens이 Prod이고 ServerSignature가 Off로 설정되지 않음" >> $Apache_Result;
+    echo "ServerTokens이 Prod이고 ServerSignature가 Off로 설정되지 않아 취약함" >> $Apache_Result;
 
     echo '' >> $Apache_Result
     cat $WA_07_TXT >> $Apache_Result
@@ -435,13 +435,13 @@ if [ $filecheck_pass -eq 0 ]; then
 
   if [ $WA_08_CHECK_COUNT -gt 0 ]; then
     echo 'WA-08,X,,' >> $Apache_Result
-  	echo "Options 지시자에서 심블릭 링크를 가능하게 하는 옵션인 FollowSymLinks가 제거되어 있지 않음" >> $Apache_Result;
+  	echo "Options 지시자에서 심블릭 링크를 가능하게 하는 옵션인 FollowSymLinks가 제거되어 있지 않아 취약함" >> $Apache_Result;
 
     echo '' >> $Apache_Result
     cat $WA_08_TXT >> $Apache_Result
   else
     echo 'WA-08,O,,' >> $Apache_Result
-  	echo "Options 지시자에서 심블릭 링크를 가능하게 하는 옵션인 FollowSymLinks가 제거되어 있음" >> $Apache_Result;
+  	echo "Options 지시자에서 심블릭 링크를 가능하게 하는 옵션인 FollowSymLinks가 제거되어 있어 양호함" >> $Apache_Result;
   fi
 
   rm -f $WA_08_TXT
@@ -481,13 +481,13 @@ if [ $filecheck_pass -eq 0 ]; then
 
   if [ $WA_09_CHECK_COUNT -gt 0 ]; then
     echo 'WA-09,X,,' >> $Apache_Result
-    echo "MultiViews 옵션이 제거되어 있지 않음" >> $Apache_Result;
+    echo "MultiViews 옵션이 존재해 취약함" >> $Apache_Result;
 
     echo '' >> $Apache_Result
     cat $WA_09_TXT >> $Apache_Result
   else
     echo 'WA-09,O,,' >> $Apache_Result
-    echo "MultiViews 옵션이 제거되어 있음" >> $Apache_Result;
+    echo "MultiViews 옵션이 제거되어 있어 양호함" >> $Apache_Result;
   fi
 
   rm -f $WA_09_TXT
@@ -516,7 +516,7 @@ if [ `cat "$conf" | egrep -i "<Limit|</Limit" | grep -v '\#' | wc -l` -gt 0 ]; t
   cat "$conf" | egrep -i "<Directory |<Limit|Order |Allow |Deny |</Limit|</Directory" | grep -v '\#' >> $Apache_Result
 else
   echo 'WA-10,X,,' >> $Apache_Result
-  echo 'HTTP 메소드 제한되지 않음' >> $Apache_Result
+  echo 'HTTP 메소드 제한되지 않아 취약함' >> $Apache_Result
 fi
 
 echo '[DONE]'
@@ -539,58 +539,243 @@ echo '[DONE]'
 echo '' >> $Apache_Result
 
 
-echo '■ WA-12. 불필요한 manual 디렉터리 삭제'
-echo '■ WA-12. 불필요한 manual 디렉터리 삭제' >> $Apache_Result
+echo "WA-12 Check Start..."
+echo "■ WA-12. 웹서비스 웹 프로세스 권한 제한" >> $Apache_Result 2>&1
+echo "■ 기준: 웹 프로세스 권한을 제한 했을 경우 양호(User root, Group root 가 아닌 경우)"	>> $Apache_Result 2>&1
+echo "■ 현황" >> $Apache_Result 2>&1
+
+if [ `ps -ef | grep "httpd" | grep -v "ns-httpd" | grep -v "grep" | awk '{print $8}' | grep "/" | grep -v "httpd.conf" | uniq | wc -l` -gt 0 ]; then
+	echo "$ACONF 파일 설정 확인"	>> $Apache_Result 2>&1
+	DividingLine $Apache_Result
+
+	if [ `cat $ACONF | grep -i "user" | grep -v "\#" | egrep -v "^LoadModule|LogFormat|IfModule|UserDir" | grep -i "user" | grep -i "root" | wc -l` -gt 0 ]; then
+		echo "WA-12,X,,"	>> $Apache_Result 2>&1
+		echo "Apache 데몬이 root 권한으로 구동되어 취약함"	>> $Apache_Result 2>&1
+	else
+		if [ `cat $ACONF | grep -i "user" | grep -v "\#" | egrep -v "^LoadModule|LogFormat|IfModule|UserDir" | grep -i "group" | grep -i "root" | wc -l` -gt 0 ]; then
+			echo "WA-12,X,,"	>> $Apache_Result 2>&1
+			echo "Apache 데몬이 root 권한으로 구동되어 취약함"	>> $Apache_Result 2>&1
+		else
+			echo "WA-12,O,,"	>> $Apache_Result 2>&1
+			echo "Apache 데몬이 root 권한으로 구동되지 않아 양호함"	>> $Apache_Result 2>&1
+		fi
+
+		NewLine $Apache_Result
+
+		cat $ACONF | grep -i "group" | grep -v "\#" | egrep -v "^LoadModule|LogFormat|IfModule|UserDir" | grep -i "group" >> $Apache_Result 2>&1
+	fi
+
+	cat $ACONF | grep -i "user" | grep -v "\#" | egrep -v "^LoadModule|LogFormat|IfModule|UserDir" | grep -i "user" >> $Apache_Result 2>&1
+
+	NewLine $Apache_Result
+	echo "httpd 데몬 동작 계정 확인"	>> $Apache_Result 2>&1
+	DividingLine $Apache_Result
+
+	ps -ef | grep "httpd"	>> $Apache_Result 2>&1
+else
+	echo "WA-12,O,,"	>> $Apache_Result 2>&1
+	echo "Apache 서비스를 사용하지 않아 양호함"	>> $Apache_Result 2>&1
+fi
+
+NewLine $Apache_Result
+
+
+echo "WA-13 Check Start..."
+echo "■ WA-13. 웹서비스 상위 디렉터리 접근 금지" >> $Apache_Result 2>&1
+echo "■ 기준: httpd.conf 파일의 Directory 부분의 AllowOverride None 설정이 아니면 양호"	>> $Apache_Result 2>&1
+echo "■ 현황" >> $Apache_Result 2>&1
+
+if [ `ps -ef | grep "httpd" | grep -v "ns-httpd" | grep -v "grep" | awk '{print $8}' | grep "/" | grep -v "httpd.conf" | uniq | wc -l` -gt 0 ]; then
+	echo "$ACONF 파일 설정 확인"	>> $Apache_Result 2>&1
+	DividingLine $Apache_Result
+
+	cat $ACONF | egrep -i "DocumentRoot " | grep -v '\#'	>> $Apache_Result 2>&1
+
+	NewLine $Apache_Result
+
+	if [ `cat $ACONF | egrep -i "<Directory |AllowOverride|</Directory" | grep -v '\#' | grep -i "None" | wc -l` -gt 0 ]; then
+		echo "WA-13,X,,"	>> $Apache_Result 2>&1
+		echo "상위 디렉터리에 이동제한을 설정하지 않아 취약함"	>> $Apache_Result 2>&1
+	else
+		echo "WA-13,O,,"	>> $Apache_Result 2>&1
+		echo "상위 디렉터리에 이동제한을 설정해 양호함"	>> $Apache_Result 2>&1
+	fi
+
+	NewLine $Apache_Result
+
+	cat $ACONF | egrep -i "<Directory |AllowOverride|</Directory" | grep -v '\#'	>> $Apache_Result 2>&1
+else
+	echo "WA-13,O,,"	>> $Apache_Result 2>&1
+	echo "Apache 서비스를 사용하지 않아 양호함"	>> $Apache_Result 2>&1
+fi
+
+NewLine $Apache_Result
+
+
+echo "WA-14 Check Start..."
+echo "■ WA-14. 웹서비스 파일 업로드 및 다운로드 제한" >> $Apache_Result 2>&1
+echo "■ 기준: 시스템에 따라 파일 업로드 및 다운로드에 대한 용량이 제한되어 있는 경우 양호"	>> $Apache_Result 2>&1
+echo "  <Directory 경로>의 LimitRequestBody 지시자에 제한용량이 설정되어 있는 경우 양호" >> $Apache_Result 2>&1
+echo "■ 현황" >> $Apache_Result 2>&1
+
+if [ `ps -ef | grep "httpd" | grep -v "ns-httpd" | grep -v "grep" | awk '{print $8}' | grep "/" | grep -v "httpd.conf" | uniq | wc -l` -gt 0 ]; then
+	echo "$ACONF 파일 설정 확인"	>> $Apache_Result 2>&1
+	DividingLine $Apache_Result
+
+	cat $ACONF | egrep -i "DocumentRoot " | grep -v '\#'	>> $Apache_Result 2>&1
+
+	NewLine $Apache_Result
+	if [ `cat $ACONF | egrep -i "<Directory |LimitRequestBody|</Directory" | grep -v '\#' | wc -l` -eq 0 ]; then
+		echo "WA-14,X,,"	>> $Apache_Result 2>&1
+		echo "파일 업로드 및 다운로드에 대한 용량이 제한되어 있지 않아 취약함"	>> $Apache_Result 2>&1
+	else
+		echo "WA-14,C,,"	>> $Apache_Result 2>&1
+		echo "[수동진단]파일 업로드 및 다운로드에 대한 용량이 제한여부 확인"	>> $Apache_Result 2>&1
+	fi
+
+	NewLine $Apache_Result
+
+	cat $ACONF | egrep -i "<Directory |LimitRequestBody|</Directory" | grep -v '\#'	>> $Apache_Result 2>&1
+else
+	echo "WA-14,O,,"	>> $Apache_Result 2>&1
+	echo "Apache 서비스를 사용하지 않아 양호함"	>> $Apache_Result 2>&1
+fi
+
+NewLine $Apache_Result
+
+
+echo "WA-15 Check Start..."
+echo "■ WA-15. 웹 서비스 영역의 분리" >> $Apache_Result 2>&1
+echo "■ 기준: DocumentRoot를 기본 디렉터리(~/Apache/htdocs)가 아닌 별도의 디렉터리로 지정한 경우 양호"	>> $Apache_Result 2>&1
+echo "■ 현황" >> $Apache_Result 2>&1
+
+if [ `ps -ef | grep "httpd" | grep -v "ns-httpd" | grep -v "grep" | awk '{print $8}' | grep "/" | grep -v "httpd.conf" | uniq | wc -l` -gt 0 ]; then
+	echo "$ACONF 파일 설정 확인"	>> $Apache_Result 2>&1
+	DividingLine $Apache_Result
+	if [ `cat $ACONF | egrep -i "DocumentRoot " | grep -v '\#' | grep "/usr/local/apache/htdocs" | wc -l` -gt 0 ]; then
+		echo "WA-15,X,,"	>> $Apache_Result 2>&1
+		echo "DocumentRoot를 기본 디렉터리로 지정하여 취약함"	>> $Apache_Result 2>&1
+	else
+		echo "WA-15,O,,"	>> $Apache_Result 2>&1
+		echo "DocumentRoot를 별도의 디렉터리로 지정하여 양호함"	>> $Apache_Result 2>&1
+	fi
+
+	cat $ACONF | egrep -i "DocumentRoot " | grep -v '\#'	>> $Apache_Result 2>&1
+
+	NewLine $Apache_Result
+else
+	echo "WA-15,O,,"	>> $Apache_Result 2>&1
+	echo "Apache 서비스를 사용하지 않아 양호함"	>> $Apache_Result 2>&1
+fi
+
+NewLine $Apache_Result
+
+
+echo '■ WA-16. 불필요한 manual 디렉터리 삭제'
+echo '■ WA-16. 불필요한 manual 디렉터리 삭제' >> $Apache_Result
 echo '■ 기준: 사용자 브라우저에서 manual로 접속이 불가능' >> $Apache_Result
 echo '■ 기준: apache_root 설치 디렉터리/manual 디렉터리가 존재하지 않음' >> $Apache_Result
 echo '■ 기준: /conf/httpd.conf 에서 매뉴얼과 관련된 부분이 삭제 또는 주석 처리' >> $Apache_Result
 echo '■ 현황' >> $Apache_Result
 
 # 점검할 디렉터리 목록
-listdir_WA_12=(
+listdir_WA_16=(
 '/cgi-bin'
 '/htdocs/manual'
 '/manual'
 )
 
-WA_12_TXT='WA_12.txt'
-WA_12_CHECK_COUNT=0
+WA_16_TXT='WA_16.txt'
+WA_16_CHECK_COUNT=0
 
 # 디렉터리 유무 확인
-for chk_WA_12 in "${listdir_WA_12[@]}"; do
-  #echo $apache_root$chk_WA_12
+for chk_WA_16 in "${listdir_WA_16[@]}"; do
+  #echo $apache_root$chk_WA_16
 
   # 디렉터리가 존재하면 파일에 추가
-  if [ -d $apache_root$chk_WA_12 ]; then
-    $apache_root$chk_WA_12  >> $WA_12_TXT
-    WA_12_CHECK_COUNT=$((WA_12_CHECK_COUNT+1))
+  if [ -d $apache_root$chk_WA_16 ]; then
+    $apache_root$chk_WA_16  >> $WA_16_TXT
+    WA_16_CHECK_COUNT=$((WA_16_CHECK_COUNT+1))
   fi
 done
 
-if [ $WA_12_CHECK_COUNT -gt 0 ]; then
-  echo 'WA-12,X,,' >> $Apache_Result
-  echo "불필요한 디렉터리가 제거되어 있지 않음" >> $Apache_Result;
+if [ $WA_16_CHECK_COUNT -gt 0 ]; then
+  echo 'WA-16,X,,' >> $Apache_Result
+  echo "불필요한 디렉터리가 제거되어 있지 않아 취약함" >> $Apache_Result;
 
   echo '' >> $Apache_Result
-  cat $WA_12_TXT >> $Apache_Result
+  cat $WA_16_TXT >> $Apache_Result
 else
-  echo 'WA-12,O,,' >> $Apache_Result
-  echo "불필요한 디렉터리가 제거되어 있음" >> $Apache_Result;
+  echo 'WA-16,O,,' >> $Apache_Result
+  echo "불필요한 디렉터리가 제거되어 있어 양호함" >> $Apache_Result;
 fi
 
-rm -f $WA_12_TXT
+rm -f $WA_16_TXT
 
 echo '[DONE]'
 echo '' >> $Apache_Result
 
 
-echo '■ WA-13. 보안 패치 적용'
-echo '■ WA-13. 보안 패치 적용' >> $Apache_Result
+echo "WA-17 Check Start..."
+echo "■ WA-17. 3. 서비스 관리 > 3.20 웹서비스 불필요한 파일 제거" >> $Apache_Result 2>&1
+echo "■ 기준: /htdocs/manual 또는 /apache/manual 디렉터리와,"	>> $Apache_Result 2>&1
+echo "       : /cgi-bin/test-cgi, /cgi-bin/printenv 파일이 제거되어 있는 경우 양호"	>> $Apache_Result 2>&1
+echo "■ 현황" >> $Apache_Result 2>&1
+
+if [ `ps -ef | grep "httpd" | grep -v "ns-httpd" | grep -v "grep" | awk '{print $8}' | grep "/" | grep -v "httpd.conf" | uniq | wc -l` -gt 0 ]; then
+	if [ -d $AHOME/cgi-bin ]; then
+		echo "$AHOME/cgi-bin 파일"	>> $Apache_Result 2>&1
+		DividingLine $Apache_Result
+
+		ls -ld $AHOME/cgi-bin/test-cgi	>> $Apache_Result 2>&1
+		ls -ld $AHOME/cgi-bin/printenv	>> $Apache_Result 2>&1
+
+		NewLine $Apache_Result
+		echo "WA-17,X,,"	>> $Apache_Result 2>&1
+		echo "$AHOME/cgi-bin 디렉터리가 제거되어 있지 않아 취약함"	>> $Apache_Result 2>&1
+	else
+		if [ -d $AHOME/htdocs/manual ]; then
+			echo "$AHOME/htdocs/manual 파일"	>> $Apache_Result 2>&1
+			DividingLine $Apache_Result
+
+			ls -ld $AHOME/htdocs/manual	>> $Apache_Result 2>&1
+
+			NewLine $Apache_Result
+			echo "WA-17,X,,"	>> $Apache_Result 2>&1
+			echo "$AHOME/htdocs/manual 디렉터리가 제거되어 있지 않아 취약함"	>> $Apache_Result 2>&1
+		else
+			if [ -d $AHOME/manual ]; then
+				echo "$AHOME/manual 파일 설정"	>> $Apache_Result 2>&1
+				DividingLine $Apache_Result
+
+				ls -ld $AHOME/manual	>> $Apache_Result 2>&1
+
+				NewLine $Apache_Result
+				echo "WA-17,X,,"	>> $Apache_Result 2>&1
+				echo "$AHOME/manual 디렉터리가 제거되어 있지 않아 취약함"	>> $Apache_Result 2>&1
+			else
+				echo "WA-17,O,,"	>> $Apache_Result 2>&1
+				echo "매뉴얼 파일 및 디렉터리가 제거되어 있어 양호함"	>> $Apache_Result 2>&1
+				NewLine $Apache_Result
+			fi
+			NewLine $Apache_Result
+		fi
+		NewLine $Apache_Result
+	fi
+else
+	echo "WA-17,O,,"	>> $Apache_Result 2>&1
+	echo "Apache 서비스를 사용하지 않아 양호함"	>> $Apache_Result 2>&1
+fi
+
+NewLine $Apache_Result
+
+echo '■ WA-18. 보안 패치 적용'
+echo '■ WA-18. 보안 패치 적용' >> $Apache_Result
 echo '■ 기준: 마지막 패치가 최근 1년 이내이면 양호' >> $Apache_Result
 echo '■ 기준: 1년 이내 패치가 존재하지 않으며 패치에 대한 적용 검토 및 대책이 존재하지 않음' >> $Apache_Result
 echo '■ 현황' >> $Apache_Result
 
-echo 'WA-13,C,,' >> $Apache_Result
+echo 'WA-18,C,,' >> $Apache_Result
 echo '[수동진단]' >> $Apache_Result
 
 echo '--httpd daemon--' >> $Apache_Result
