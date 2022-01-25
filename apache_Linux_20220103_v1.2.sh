@@ -42,8 +42,9 @@ do
   fi
 done
 echo ''
-
+ACONF=apache_conf.txt
 conf="$apache_root/conf/httpd.conf"
+cat $conf >> $ACONF
 
 echo ''
 
@@ -793,6 +794,8 @@ httpd -v >> $Apache_Result
 
 echo '[DONE]'
 echo '' >> $Apache_Result
+
+rm -f $ACONF
 
 echo "------------------------Basic RAW---------------------------" >> $Apache_Result
 echo '' >> $Apache_Result
